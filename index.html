@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulkan Moçambique | Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0088cc;
+            --secondary: #28a745;
+            --dark: #121212;
+            --gold: #ffcf33;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
+            margin: 0; 
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+            padding-bottom: 90px;
+        }
+
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 136, 204, 0.15), transparent 80%);
+            animation: pulse 8s infinite alternate;
+            z-index: -1;
+        }
+        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; } }
+
+        .box { 
+            background: var(--glass); 
+            backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 25px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            width: 85%; 
+            max-width: 400px; 
+            margin: 40px auto; 
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2, h3 { color: var(--dark); font-weight: 700; text-align: center; }
+        .vulkan-logo { color: var(--primary); font-size: 28px; letter-spacing: 2px; display: block; text-align: center; font-weight: bold; }
+
+        input { 
+            width: 100%; padding: 15px; margin: 12px 0; 
+            border: 2px solid #e1e1e1; border-radius: 15px; 
+            font-size: 16px; box-sizing: border-box;
+        }
+
+        button { 
+            width: 100%; padding: 16px; margin: 10px 0; 
+            border: none; border-radius: 15px; 
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.4s;
+        }
+
+        .btn-main { background: linear-gradient(to right, #0088cc, #0055ff); color: white; box-shadow: 0 10px 20px rgba(0,85,255,0.2); }
+        .btn-wa-group { background: #25D366; color: white; font-size: 14px; margin-top: 5px; }
+
+        .nav-bottom { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: white; display: none; 
+            justify-content: space-around; padding: 12px 0; 
+            border-radius: 25px 25px 0 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.2); z-index: 1000;
+        }
+        .nav-item { border: none; background: none; font-size: 11px; color: #777; cursor: pointer; font-family: 'Poppins'; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+
+        .card-plano { 
+            background: white; padding: 18px; border-radius: 18px; 
+            margin-bottom: 15px; border-left: 6px solid var(--secondary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .dados- Samuel {
+            background: #f0f7ff; border: 2px dashed var(--primary);
+            padding: 15px; border-radius: 15px; margin: 15px 0;
+        }
+
+        .forgot-pass { text-align: center; display: block; font-size: 13px; color: #666; text-decoration: none; margin-top: 10px; }
+
+        #register-screen, #dashboard-screen, #payment-screen, #payment-details, #withdraw-screen, #invite-screen, #profile-screen, #forgot-screen { 
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div id="welcome-screen" class="box" style="margin-top: 100px;">
+        <span class="vulkan-logo">VULKAN</span>
+        <h2>Moçambique</h2>
+        <button class="btn-main" onclick="showScreen('login-screen')">Entrar</button>
+        <button style="background:#f8f9fa; border: 1px solid #ddd;" onclick="showScreen('register-screen')">Criar Conta</button>
+    </div>
+
+    <div id="login-screen" class="box">
+        <h3>Entrar</h3>
+        <input type="tel" id="loginPhone" placeholder="Telemóvel">
+        <input type="password" id="loginCode" placeholder="Palavra-passe">
+        <button class="btn-main" onclick="handleLogin()">Entrar</button>
+        <a href="#" class="forgot-pass" onclick="showScreen('forgot-screen')">Esqueceu a palavra-passe?</a>
+        <button style="background:none; color:#999; font-size:12px;" onclick="showScreen('welcome-screen')">Voltar</button>
+    </div>
+
+    <div id="forgot-screen" class="box">
+        <h3>Recuperar Conta</h3>
+        <p style="font-size: 13px; text-align: center; color: #666;">Introduza o seu número. O suporte irá validar a sua identidade para redefinir a senha.</p>
+        <input type="tel" id="resetPhone" placeholder="Número da Conta">
+        <button class="btn-main" onclick="handleRecovery()">Solicitar Nova Senha</button>
+        <button style="background:none; color:#999;" onclick="showScreen('login-screen')">Voltar</button>
+    </div>
+
+    <div id="register-screen" class="box">
+        <h3>Registar</h3>
+        <input type="tel" id="regPhone" placeholder="Telemóvel">
+        <input type="password" id="regCode" placeholder="Criar Senha">
+        <input type="password" id="regConfirm" placeholder="Confirmar Senha">
+        <button class="btn-main" onclick="handleRegister()">Criar Conta e Ganhar 50MT</button>
+    </div>
+
+    <div id="dashboard-screen" class="box">
+        <div style="background:#1a1a1a; color:var(--gold); padding:20px; border-radius:20px; text-align:center; margin-bottom:20px;">
+            <span style="font-size:11px;">SALDO DISPONÍVEL</span>
+            <h2 id="userSaldo" style="margin:5px 0;">50.00 MT</h2>
+        </div>
+        
+        <div class="card-plano">
+            <p><b>300 MT</b> (20 dias) <br> Retorno: <span style="color:var(--secondary);">700 MT</span></p>
+            <button class="btn-main" style="padding:10px;" onclick="showScreen('payment-screen')">Investir</button>
+        </div>
+        <div class="card-plano">
+            <p><b>500 MT</b> (20 dias) <br> Retorno: <span style="color:var(--secondary);">1.100 MT</span></p>
+            <button class="btn-main" style="padding:10px;" onclick="showScreen('payment-screen')">Investir</button>
+        </div>
+        <div class="card-plano">
+            <p><b>1.020 MT</b> (15 dias) <br> Retorno: <span style="color:var(--secondary);">2.200 MT</span></p>
+            <button class="btn-main" style="padding:10px;" onclick="showScreen('payment-screen')">Investir</button>
+        </div>
+    </div>
+
+    <div id="payment-screen" class="box">
+        <h3>Escolha Operador</h3>
+        <button style="background:#d9534f; color:white;" onclick="showPaymentDetails('M-Pesa')">M-Pesa</button>
+        <button style="background:#ffc107; color:black;" onclick="showPaymentDetails('e-Mola')">e-Mola</button>
+        <button style="background:none; color:#999;" onclick="showScreen('dashboard-screen')">Voltar</button>
+    </div>
+
+    <div id="payment-details" class="box">
+        <h3 id="opTitle">Pagamento</h3>
+        <div class="dados- Samuel">
+            <p><b>Titular:</b> <span id="opName"></span></p>
+            <p><b>Número:</b> <span id="opNumber" style="font-size:20px; color:var(--primary); font-weight:bold;"></span></p>
+        </div>
+        <button class="btn-main" onclick="window.open('https://wa.me/258842250940')">Enviar Comprovativo</button>
+        <button style="background:none; color:#999;" onclick="showScreen('payment-screen')">Voltar</button>
+    </div>
+
+    <div id="withdraw-screen" class="box">
+        <h3>Levantamento</h3>
+        <p style="font-size:12px; text-align:center;">Horário: 08:00 - 20:00</p>
+        <input type="number" id="valRet" placeholder="Valor (Mín 100MT)">
+        <button class="btn-main" onclick="alert('Sucesso! O pedido será processado em breve.')">Pedir Levantamento</button>
+    </div>
+
+    <nav class="nav-bottom" id="main-nav">
+        <button class="nav-item active" onclick="navigate('dashboard-screen', this)">🏠<br>Início</button>
+        <button class="nav-item" onclick="navigate('withdraw-screen', this)">💰<br>Retirar</button>
+        <button class="nav-item" onclick="navigate('invite-screen', this)">🤝<br>Convidar</button>
+        <button class="nav-item" onclick="navigate('profile-screen', this)">👤<br>Perfil</button>
+        <button class="nav-item" style="color:#25D366; font-weight:bold;" onclick="window.open('https://chat.whatsapp.com/CYNxlMtEDA9CB6aFitGbOs')">💬<br>Grupo</button>
+    </nav>
+
+    <div id="invite-screen" class="box">
+        <h3>Convidar</h3>
+        <button class="btn-main" style="background:#25D366;" onclick="window.open('https://wa.me/?text=Mude+sua+vida+com+a+Vulkan!')">WhatsApp</button>
+    </div>
+
+    <div id="profile-screen" class="box">
+        <h3>Perfil</h3>
+        <p id="profDisp">Número: ---</p>
+        <button class="btn-main" style="background:#d9534f;" onclick="location.reload()">Sair</button>
+    </div>
+
+    <script>
+        function showScreen(id) {
+            document.querySelectorAll('.box').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            const authScreens = ['dashboard-screen', 'withdraw-screen', 'invite-screen', 'profile-screen', 'payment-screen', 'payment-details'];
+            document.getElementById('main-nav').style.display = authScreens.includes(id) ? 'flex' : 'none';
+        }
+
+        function navigate(id, btn) {
+            showScreen(id);
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function handleRegister() {
+            const fone = document.getElementById('regPhone').value;
+            const pass = document.getElementById('regCode').value;
+            if(fone.length < 9) return alert("Número inválido.");
+            localStorage.setItem('v_user', fone);
+            localStorage.setItem('v_pass', pass);
+            alert("Conta criada! Já pode entrar.");
+            showScreen('login-screen');
+        }
+
+        function handleLogin() {
+            const fone = document.getElementById('loginPhone').value;
+            const pass = document.getElementById('loginCode').value;
+            if(fone === localStorage.getItem('v_user') && pass === localStorage.getItem('v_pass')) {
+                document.getElementById('profDisp').innerText = "Número: " + fone;
+                showScreen('dashboard-screen');
+            } else { alert("Dados incorretos."); }
+        }
+
+        function handleRecovery() {
+            const fone = document.getElementById('resetPhone').value;
+            if(fone.length >= 9) {
+                window.open("https://wa.me/258842250940?text=Olá,+esqueci+minha+palavra-passe+da+Vulkan.+Número:+" + fone);
+            } else { alert("Introduza um número válido."); }
+        }
+
+        function showPaymentDetails(op) {
+            showScreen('payment-details');
+            document.getElementById('opTitle').innerText = "Via " + op;
+            if(op === 'M-Pesa') {
+                document.getElementById('opName').innerText = "Samuel Francisco";
+                document.getElementById('opNumber').innerText = "842250940";
+            } else {
+                document.getElementById('opName').innerText = "Samuel Paulo Francisco";
+                document.getElementById('opNumber').innerText = "869837094";
+            }
+        }
+
+        showScreen('welcome-screen');
+    </script>
+</body>
+</html>
